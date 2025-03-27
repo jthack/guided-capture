@@ -56,6 +56,43 @@ result = capture.process_answers()
 print("\nFinal Output:", result)
 ```
 
+## UI-Agnostic Design
+
+A key feature of GuidedCapture is its separation of concerns: the library handles question generation and answer processing but leaves the user interaction entirely up to your application. This means you can:
+
+- **Present Questions Your Way**: Show questions in a web form, chat interface, CLI, mobile app, or any other format
+- **Collect Answers Your Way**: Accept text input, voice recordings, form submissions, API calls, etc.
+- **Control the Flow**: Decide whether to show all questions at once or one at a time
+- **Handle Special Cases**: Add your own validation, preprocessing, or transformation of answers
+
+Here are some examples of how you might integrate GuidedCapture with different interfaces:
+
+```python
+# Web Form
+@app.route('/submit_answer', methods=['POST'])
+def submit_answer():
+    question = request.form['question']
+    answer = request.form['answer']
+    capture.submit_answer(question, answer)
+    return jsonify({"success": True})
+
+# Voice Interface
+def handle_voice_response(audio_input):
+    transcribed_answer = speech_to_text(audio_input)
+    capture.submit_answer(current_question, transcribed_answer)
+
+# Batch Processing
+def process_csv_responses(csv_file):
+    answers = {}
+    with open(csv_file) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            answers[row['question']] = row['answer']
+    capture.submit_answers_bulk(answers)
+```
+
+This flexibility means GuidedCapture can be integrated into virtually any application that needs structured interviews, regardless of the interface or user experience requirements.
+
 ## Advanced Usage
 
 ### Bulk Answer Submission
